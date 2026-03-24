@@ -1,7 +1,8 @@
 "use client"
 import { AddWishListAction } from "@/app/Action/WishList";
 import { Heart, Loader2 } from "lucide-react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+
 
 
 import React, { useState } from "react";
