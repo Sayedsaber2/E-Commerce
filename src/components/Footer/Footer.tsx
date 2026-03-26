@@ -11,7 +11,7 @@ export default function Footer() {
 
           {/* Company Info */}
           <div className="lg:col-span-2">
-            <h3 className="text-2xl font-bold text-white mb-4">Shop Mart</h3>
+            <h3 className="text-2xl font-bold text-white mb-4">Shop Hup</h3>
             <p className="text-sm leading-relaxed mb-6 max-w-sm">
               Your one-stop destination for the latest technology, fashion,
               and lifestyle products. Quality guaranteed with fast shipping
@@ -78,7 +78,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-white/10 mt-12 pt-6 text-center text-sm text-blue-200">
-          © {new Date().getFullYear()} Shop Mart. All rights reserved.
+          © {new Date().getFullYear()} Shop Hup. All rights reserved.
         </div>
       </div>
     </footer>

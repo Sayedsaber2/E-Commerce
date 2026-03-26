@@ -9,7 +9,7 @@ export const schema = z.object({
   rePassword: z.string().nonempty("rePassword is required"),
   phone: z.string().nonempty("phone is required").regex(/^01[0125][0-9]{8}$/gm,"Enter an Egyptian number"),
 }).refine((data) => data.rePassword == data.password, {
-  path: ["repassword"],
+  path: ["rePassword"],
   message: "password and rePassword dont match",
 })
 export type SignUpFormValues = z.infer<typeof schema>;

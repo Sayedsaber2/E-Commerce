@@ -11,7 +11,7 @@ import { getServerSession } from "next-auth";
 export async function RegstierData(value: SignUpFormValues) {
 
   try {
-    console.log("Sending data:", value)
+    
     const response = await fetch("https://ecommerce.routemisr.com/api/v1/auth/signup", {
       method: "POST",
       headers: {
@@ -22,14 +22,14 @@ export async function RegstierData(value: SignUpFormValues) {
     const data = await response.json()
     console.log("API Response:", data);
     if (!response.ok || data.statusMsg === "fail") {
-      throw new Error(data.message || "Register failed");
+      return { error: data.message || "Register failed" };
     }
     return data
   }
   catch (err) {
 
-    console.log(getErrorMessage(err), "Register API Error:");
-    throw err
+    
+    return { error: getErrorMessage(err) || "Something went wrong" }
 
   }
 }

@@ -12,7 +12,7 @@ import { RegstierData } from "@/app/Action/actionauth";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { Loader } from "lucide-react";
+import { Loader, UserPlus } from "lucide-react";
 import { getErrorMessage } from "@/Helpers/error";
 
 
@@ -38,21 +38,16 @@ export default function SignUpForm() {
   async function signUp(value: SignUpFormValues) {
     setisLoading(true);
     setApierror(null);
-    try {
-      const data = await RegstierData(value);
-      console.log("Register success:", data);
-      // هنا بقى تعمل اللي انت عايزه
-      toast.success("Account created successfully!")
-      router.push("/login")
+    const data = await RegstierData(value);
+    if (data?.error) {
+      setApierror(data.error);
+      toast.error(data.error);
+    } else {
+      toast.success("Account created successfully!");
+      router.push("/login");
     }
-    catch (err) {
-      const errorMsg = getErrorMessage(err) || "Something went wrong";
-      setApierror(errorMsg || "Something went wrong")
-      toast.error(errorMsg || "Something went wrong");
-    }
-    finally {
-      setisLoading(false);
-    }
+
+    setisLoading(false);
   }
 
 
@@ -61,8 +56,9 @@ export default function SignUpForm() {
   return <>
     <div className=" w-full max-w-md flex flex-col gap-4 rounded-xl py-4 bg-blue-950/80 text-white border border-white/10 shadow-2xl backdrop-blur ">
       <CardHeader className="text-center p-0 pb-0 space-y-1">
-        <CardTitle className="text-3xl font-bold">
-          Create your Account 👋
+        <CardTitle className="text-3xl font-bold flex items-center justify-center gap-2 mb-2 ">
+          <UserPlus className="w-7 h-7 text-blue-400" />
+          Create your Account
         </CardTitle>
 
       </CardHeader>

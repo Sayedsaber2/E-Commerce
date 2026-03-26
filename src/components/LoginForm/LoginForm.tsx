@@ -82,8 +82,8 @@ export function LoginForm() {
 
     <Card className="w-full max-w-md bg-blue-950/80 text-white border border-white/10 shadow-2xl backdrop-blur ">
       <CardHeader className="text-center space-y-2">
-        <CardTitle className="text-3xl font-bold">
-           <User className="w-6 h-6 text-white" />
+        <CardTitle className="text-3xl font-bold flex items-center justify-center gap-2 mb-2">
+           <User className="w-6 h-6 text-blue-400 " />
           Welcome Back 
         </CardTitle>
         <CardDescription className="text-blue-300">
