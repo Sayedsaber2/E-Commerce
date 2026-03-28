@@ -1,17 +1,18 @@
 import { getToken } from "next-auth/jwt"
 import { NextRequest, NextResponse } from "next/server"
 
-const productRoutes = ["/profile", "/cart", "/wishlist","/orders"] 
+const productRoutes = ["/profile", "/cart", "/wishlist","/allorders"] 
 const AuthRoutes = ["/login", "/forgotpassword", "/signup"]
 
 export default async function middleware(req: NextRequest) {
     const token = await getToken({ req })
+    
     if (productRoutes.includes(req.nextUrl.pathname)) {
         if (token) {
             return NextResponse.next()
         } else {
             const redirectURL = new URL("/login", process.env.NEXTAUTH_URL)
-            redirectURL.searchParams.set("url", req.nextUrl.pathname)
+            redirectURL.searchParams.set("url", req.nextUrl.pathname )
             return NextResponse.redirect(redirectURL)
         }
     }

@@ -10,25 +10,26 @@ export default function AddToCart({ productId }: { productId: string }) {
   const router = useRouter()
   const [isLoadind, setisLoadind] = useState(false)
   async function addToCart(productId: string) {
-  setisLoadind(true)
-  const result = await addToCardActoion(productId)
+    setisLoadind(true)
+    const result = await addToCardActoion(productId)
 
-  if (!result) {
-    toast.error("Please login to add to cart");
-    router.push("/login");
-  } else if ("error" in result) {
-    toast.error(result.error); // هنا بنعرض رسالة الخطأ
-  } else if (result.status === "success") {
-    toast.success(result.message || "Added to cart successfully");
-    window.dispatchEvent(
-      new CustomEvent("cartupdate", { detail: result.numOfCartItems })
-    );
-  } else {
-    toast.error(result.message || "Failed to add to cart");
+    if (!result) {
+      toast.error("Please login to add to cart");
+      const currentUrl = window.location.pathname;
+      router.push(`/login?url=${encodeURIComponent(currentUrl)}`);
+    } else if ("error" in result) {
+      toast.error(result.error); // هنا بنعرض رسالة الخطأ
+    } else if (result.status === "success") {
+      toast.success(result.message || "Added to cart successfully");
+      window.dispatchEvent(
+        new CustomEvent("cartupdate", { detail: result.numOfCartItems })
+      );
+    } else {
+      toast.error(result.message || "Failed to add to cart");
+    }
+
+    setisLoadind(false)
   }
-
-  setisLoadind(false)
-}
   return (
     <><Button disabled={isLoadind} onClick={(e) => {
       e.stopPropagation()

@@ -7,34 +7,35 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 
 export default function HeartDetils({ productId }: { productId: string }) {
-  const router = useRouter()
+    const router = useRouter()
     const [Loading, setLoading] = useState(false);
 
     async function addWishList(productId: string) {
-    setLoading(true)
+        setLoading(true)
 
-    const response = await AddWishListAction(productId)
+        const response = await AddWishListAction(productId)
 
-    if (response == null) {
-        toast.error("Please login to add to wishlist")
-        router.push("/login")
+        if (response == null) {
+            toast.error("Please login to add to wishlist")
+            const currentUrl = window.location.pathname;
+            router.push(`/login?url=${encodeURIComponent(currentUrl)}`);
 
-    } else if ("success" in response && response.success) {
-        toast.success(response.message)
+        } else if ("success" in response && response.success) {
+            toast.success(response.message)
 
-    } else if ("error" in response) {
-        toast.error(response.error)
+        } else if ("error" in response) {
+            toast.error(response.error)
 
-    } else {
-        toast.error(response.message)
+        } else {
+            toast.error(response.message)
+        }
+
+        setLoading(false)
     }
 
-    setLoading(false)
-}
-
-  return <>
-  <button disabled={Loading} onClick={() => addWishList(productId)} className="p-2.5 rounded-xl cursor-pointer border border-blue-600 hover:bg-pink-500 transition">
-                {Loading ? <Loader2 className=' animate-spin' /> : <Heart size={18} />}
-            </button>
-  </>;
+    return <>
+        <button disabled={Loading} onClick={() => addWishList(productId)} className="p-2.5 rounded-xl cursor-pointer border border-blue-600 hover:bg-pink-500 transition">
+            {Loading ? <Loader2 className=' animate-spin' /> : <Heart className="text-white" size={18} />}
+        </button>
+    </>;
 }
