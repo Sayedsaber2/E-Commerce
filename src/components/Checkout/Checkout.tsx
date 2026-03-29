@@ -54,7 +54,7 @@ export default function Checkout({ cartID }: { cartID: string }) {
                     new CustomEvent("cartupdate", { detail: 0 })
                 )
                 alert("Order placed successfully! Pay cash on delivery.")
-                router.push("/allorders")
+                window.location.href = "/allorders"
             }
         }
         setloadaing(false);

@@ -54,7 +54,7 @@ export default function NavbarClient({ serverCartNum, cartOwner }: { serverCartN
         return () => {
             window.removeEventListener("cartupdate", handleCart as EventListener)
         }
-    }, [cartOwner])
+    }, [])
     return <div>
         <motion.nav
             initial={{ y: 0, opacity: 1 }}

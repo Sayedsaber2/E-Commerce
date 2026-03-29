@@ -5,6 +5,10 @@ const productRoutes = ["/profile", "/cart", "/wishlist","/allorders"]
 const AuthRoutes = ["/login", "/forgotpassword", "/signup"]
 
 export default async function middleware(req: NextRequest) {
+
+     if (req.nextUrl.pathname.startsWith("/api/auth")) {
+        return NextResponse.next()
+    }
     const token = await getToken({ req })
     
     if (productRoutes.includes(req.nextUrl.pathname)) {
