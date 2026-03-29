@@ -22,7 +22,7 @@ export default async function Navbar() {
 
   return (
     <>
-      <NavbarClient serverCartNum={data?.numOfCartItems} cartOwner={data?.data.cartOwner} />
+      <NavbarClient serverCartNum={data?.numOfCartItems}  />
     </>
   )
 }
