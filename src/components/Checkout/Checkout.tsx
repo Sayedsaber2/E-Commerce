@@ -23,7 +23,7 @@ import { Loader2 } from "lucide-react"
 import { CheckoutCashActoion, CheckoutOnlineActoion } from "@/app/Action/cartaction"
 import { useRouter } from "next/navigation"
 
-export default function Checkout({ cartID }: { cartID: string }) {
+export default function Checkout({ cartID, cartOwner }: { cartID: string; cartOwner: string }) {
     const router = useRouter()
 
     const [loadaing, setloadaing] = useState(false);
@@ -41,6 +41,9 @@ export default function Checkout({ cartID }: { cartID: string }) {
             details: details.current?.value || "",
             phone: phone.current?.value || ""
         }
+        if (cartOwner) {
+        localStorage.setItem("cartOwner", cartOwner);
+    }
         let response;
         if (paymentMethod === "online") {
             response = await CheckoutOnlineActoion(cartID, shippingAddress)
@@ -54,7 +57,7 @@ export default function Checkout({ cartID }: { cartID: string }) {
                     new CustomEvent("cartupdate", { detail: 0 })
                 )
                 alert("Order placed successfully! Pay cash on delivery.")
-                window.location.href = "/allorders"
+                router.push("/allorders");
             }
         }
         setloadaing(false);

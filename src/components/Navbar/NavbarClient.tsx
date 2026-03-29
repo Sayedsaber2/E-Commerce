@@ -22,7 +22,7 @@ import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-
 import { signOut, useSession } from 'next-auth/react'
 
 
-export default function NavbarClient({ serverCartNum, cartOwner }: { serverCartNum?: number, cartOwner?: string }) {
+export default function NavbarClient({ serverCartNum }: { serverCartNum?: number  }) {
 
     const path = usePathname()
     const [open, setopen] = useState(false);
@@ -40,9 +40,7 @@ export default function NavbarClient({ serverCartNum, cartOwner }: { serverCartN
 
     })
     useEffect(() => {
-        if (cartOwner) {
-            localStorage.setItem("cartOwner", cartOwner)
-        }
+        
 
         function handleCart(e: Event) {
             const customEvent = e as CustomEvent

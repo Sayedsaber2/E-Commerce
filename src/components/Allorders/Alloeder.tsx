@@ -11,34 +11,43 @@ import OrdersSkeleton from "../loadingorders/loadingorders";
 export default function AllOrders() {
   const [orders, setOrders] = useState<OrderRes[] | []>([]);
   const [loading, setLoading] = useState(true);
- useEffect(() => {
-  const fetchOrders = async () => {
-    const cartOwner = localStorage.getItem("cartOwner");
-    if (!cartOwner) {
-      setOrders([]);
-      setLoading(false);
-      return;
-    }
+  useEffect(() => {
+    const fetchOrders = async () => {
+      
+    
 
-    try {
-      const response = await fetch(`https://ecommerce.routemisr.com/api/v1/orders/user/${cartOwner}`);
-      const data: OrderRes[] = await response.json();
-      setOrders(data);
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-      setOrders([]);
-    } finally {
-      setLoading(false);
+    // fallback لو الكارت فاضي
+    const owner = localStorage.getItem("cartOwner") || "";
+    if (!owner) {
     }
-  };
+      
+      if (!owner) {
+        setOrders([]);
+        setLoading(false);
+        return;
+      }
 
-  fetchOrders();
-}, []);
+      try {
+        const response = await fetch(`https://ecommerce.routemisr.com/api/v1/orders/user/${owner}`);
+        const data: OrderRes[] = await response.json();
+        setOrders(data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+        setOrders([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+
   if (loading) {
     return <OrdersSkeleton />;
   }
 
-  if (!orders.length) {
+  if (!loading &&!orders.length) {
     return <EmptyOrders />
   }
   return (

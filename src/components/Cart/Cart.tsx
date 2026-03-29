@@ -175,7 +175,7 @@ export default function Cart({ cartData }: { cartData: CartRse | null }) {
                                 </span>
                             </div>
                             {/* Checkout */}
-                            <Checkout cartID={cart.cartId} />
+                            <Checkout cartID={cart.cartId} cartOwner={cart.data.cartOwner} />
 
                             {/* Continue Shopping */}
                             <Link href="/product">
