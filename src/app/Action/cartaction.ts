@@ -42,10 +42,10 @@ export async function ClearCartAction() {
 
 export async function CheckoutOnlineActoion(cartID: string, shippingAddress: ShippingAddress) {
     const session = await getServerSession(authoptions)
-    
+    const baseUrl = process.env.NEXTAUTH_URL
     
         try {
-            const response = await fetch(`https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartID}?url=http://localhost:3000`, {
+            const response = await fetch(`https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartID}?url=${baseUrl}`, {
                 method: "POST",
                 body: JSON.stringify({ shippingAddress }),
                 headers: {
