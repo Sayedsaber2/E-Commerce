@@ -20,7 +20,7 @@ export default async function Categories() {
 ]
 
   return (
-   <div className=' container mx-auto px-4 py-10 pt-18 grid grid-cols-4 auto-rows-[160px] gap-4'>
+   <div className=' container mx-auto px-4 py-10 pt-18 grid grid-cols-2 md:grid-cols-4 grid-flow-row-dense md:grid-flow-row auto-rows-[160px] gap-4'>
   {categories.map((category, index) => {
     const pattern = patterns[index % patterns.length]
     return (
@@ -36,7 +36,7 @@ export default async function Categories() {
           <div className='absolute inset-0 bg-linear-to-t from-black/70 to-transparent' />
           
           {/* Name */}
-          <h3 className={`absolute bottom-3 left-3 font-bold text-white ${pattern.textSize}`}>
+          <h3 className={`absolute bottom-3 left-3 right-3 font-bold text-white ${pattern.textSize}`}>
             {category.name}
           </h3>
         </div>
