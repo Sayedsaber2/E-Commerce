@@ -57,6 +57,8 @@ export default function WishList({ wishlistData }: { wishlistData: FavRse | null
             className="relative rounded-2xl group overflow-hidden border border-white/10 bg-white/5 backdrop-blur-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-transform"
           >
             <button
+              type="button"
+              aria-label={`Remove ${product.title} from wishlist`}
               disabled={Loading === product._id}
               onClick={() => DeleteWishtList(product._id)}
               className="absolute z-10 top-4 right-4 bg-black/50 p-2 cursor-pointer rounded-full hover:bg-pink-500 transition-all duration-300"

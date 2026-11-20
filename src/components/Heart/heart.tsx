@@ -30,8 +30,9 @@ export default function FavHeart({ productId }: { productId: string }) {
         setLoading(false);
     }
     return <>
-        <button disabled={Loading} onClick={() => addWishList(productId)} className="absolute cursor-pointer z-20 top-3 right-3 bg-black/50 p-2 rounded-full hover:bg-pink-500 transition">
-            {Loading ? <Loader2 className=' animate-spin' /> : <Heart size={18}  />}
+        {/* aria-label: الزرار أيقونة بس، فبنكتب وظيفته لقارئ الشاشة */}
+        <button type="button" aria-label="Add to wishlist" disabled={Loading} onClick={() => addWishList(productId)} className="absolute cursor-pointer z-20 top-3 right-3 bg-black/50 p-2 rounded-full hover:bg-pink-500 transition">
+            {Loading ? <Loader2 className=' animate-spin' aria-hidden="true" /> : <Heart size={18} aria-hidden="true" />}
         </button>
     </>;
 }

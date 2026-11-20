@@ -1,22 +1,46 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import AddToCart from "@/components/Addcart/addcart";
 import FavHeart from "@/components/Heart/heart";
-import { categories } from "@/interfaces/interfacecategories";
-import { productResponse } from "@/interfaces/interfaceproduct";
 import { ArrowLeft, Award, Package, Star } from "lucide-react";
-import { Params } from "next/dist/server/request/params";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { getAllProducts, getCategory } from "@/lib/api";
 
-export default async function categoriesDetails({ params }: { params: Params }) {
+type Props = { params: Promise<{ categoriesid: string }> }
+
+// generateStaticParams: نفس فكرة صفحة المنتج
+export async function generateStaticParams() {
+    // [] فاضية: كل صفحة بتتبني أول مرة حد يفتحها، وبعدها بتتحفظ جاهزة لكل اللي بعده
+    // مش بنبنيهم كلهم وقت الـ build، لأن الـ API بيرفض لما يجيله 145 طلب مرة واحدة
+    return []
+}
+
+// generateMetadata: كل قسم ليه عنوان ووصف لوحده في جوجل
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { categoriesid } = await params
-    const response = await fetch('https://ecommerce.routemisr.com/api/v1/categories/' + categoriesid)
-    const { data: category }: { data: categories } = await response.json()
+    const category = await getCategory(categoriesid)
+    if (!category) return { title: "Category not found", robots: { index: false } }
 
+    return {
+        title: category.name,
+        description: `Shop ${category.name} products from top brands at the best prices on ShopHub.`,
+        alternates: { canonical: `/categories/${category._id}` },
+        openGraph: { title: category.name, images: [category.image] },
+    }
+}
 
-    const productsResponse = await fetch(`https://ecommerce.routemisr.com/api/v1/products?category=${category._id}`)
+export default async function categoriesDetails({ params }: Props) {
+    const { categoriesid } = await params
+    const category = await getCategory(categoriesid)
+    // notFound: الـ id غلط، فبنعرض صفحة 404 حقيقية
+    if (!category) notFound()
 
-    const productsData: productResponse = await productsResponse.json()
+    // getAllProducts: منتجات القسم ده بس، ومن كل الصفحات
+    const products = await getAllProducts(`&category=${category._id}`)
+    // productsData: نفس الشكل اللي الصفحة كانت مستخدماه، عشان باقي الصفحة يفضل زي ما هو
+    const productsData = { results: products.length, data: products }
 
     const avgRating = productsData.data.length > 0
 
@@ -25,7 +49,7 @@ export default async function categoriesDetails({ params }: { params: Params }) 
     return <div className='container mx-auto pt-24 px-4'>
         {/* Back Button */}
         <Link href='/categories' className='inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 mb-8 transition group'>
-            <ArrowLeft size={20} className='group-hover:-translate-x-1 transition-transform' />
+            <ArrowLeft size={20} aria-hidden="true" className='group-hover:-translate-x-1 transition-transform' />
             <span>Back to All Categories</span>
         </Link>
 
@@ -139,7 +163,8 @@ export default async function categoriesDetails({ params }: { params: Params }) 
                                         <Star
                                             key={i}
                                             size={16}
-                                            className={`${i < 4 ? "fill-yellow-400 text-yellow-400" : "text-gray-500"
+                                            aria-hidden="true"
+                                            className={`${i < Math.round(product.ratingsAverage) ? "fill-yellow-400 text-yellow-400" : "text-gray-500"
                                                 }`}
                                         />
                                     ))}

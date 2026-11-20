@@ -122,7 +122,7 @@ export default function Cart({ cartData }: { cartData: CartRse | null }) {
                                 {/* Quantity */}
                                 <div className="flex items-center justify-between mt-4">
                                     <div className="flex items-center border border-white/20 rounded-lg overflow-hidden">
-                                        <button disabled={item.count == 1} onClick={() => UpDateCart(item.product._id, item.count - 1)} className="px-3 py-1 cursor-pointer hover:bg-white/10 transition">
+                                        <button type="button" aria-label="Decrease quantity" disabled={item.count == 1} onClick={() => UpDateCart(item.product._id, item.count - 1)} className="px-3 py-1 cursor-pointer hover:bg-white/10 transition">
                                             -
                                         </button>
                                         <span className="px-4 font-medium">
@@ -132,7 +132,7 @@ export default function Cart({ cartData }: { cartData: CartRse | null }) {
                                                 item.count
                                             )}
                                         </span>
-                                        <button disabled={item.count == item.product.quantity} onClick={() => UpDateCart(item.product._id, item.count + 1)} className="px-3 py-1 cursor-pointer hover:bg-white/10 transition">
+                                        <button type="button" aria-label="Increase quantity" disabled={item.count == item.product.quantity} onClick={() => UpDateCart(item.product._id, item.count + 1)} className="px-3 py-1 cursor-pointer hover:bg-white/10 transition">
                                             +
                                         </button>
                                     </div>

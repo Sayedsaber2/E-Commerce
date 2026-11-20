@@ -4,6 +4,20 @@ import { authoptions } from "@/auth"
 import { ShippingAddress } from "@/interfaces/Cartinterface"
 import { getServerSession } from "next-auth"
 
+// GetCartCountAction: عدد المنتجات في الكارت عشان الرقم اللي على أيقونة الكارت في الناف بار
+// الناف بار بيناديها من المتصفح، فالصفحات نفسها مش محتاجة تقرا الـ session
+export async function GetCartCountAction(): Promise<number> {
+    const session = await getServerSession(authoptions)
+    if (!session) return 0
+    const response = await fetch("https://ecommerce.routemisr.com/api/v1/cart", {
+        headers: { token: session.token as string },
+        cache: "no-store",
+    })
+    if (!response.ok) return 0
+    const data = await response.json()
+    return data.numOfCartItems ?? 0
+}
+
 export async function UpDateCartAction(ProductId:string,count:number) {
     const session=await getServerSession(authoptions)
     const response=await fetch("https://ecommerce.routemisr.com/api/v1/cart/"+ProductId,{

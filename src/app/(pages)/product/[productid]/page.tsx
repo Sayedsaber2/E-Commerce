@@ -1,25 +1,78 @@
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import AddCart from '@/components/Addcart/addcart'
-import { product } from '@/interfaces/interfaceproduct'
 import { ArrowLeft, Package, Star, Tag } from 'lucide-react'
+import { getProduct } from '@/lib/api'
 
 import React from 'react'
 import Slider from '@/components/slider/slider'
 import HeartDetils from '@/components/HeartDetils/HeartDetils'
 import Link from 'next/link'
 import { formatCurrency } from '@/Helpers/formatCurrency'
-export default async function ProductDetails({ params }: { params: { productid: string } }) {
+type Props = { params: Promise<{ productid: string }> }
+
+// generateStaticParams: وجودها بيخلي صفحات المنتجات تتحفظ جاهزة بدل ما تتبني مع كل زيارة
+export async function generateStaticParams() {
+  // [] فاضية: كل صفحة بتتبني أول مرة حد يفتحها، وبعدها بتتحفظ جاهزة لكل اللي بعده
+  // مش بنبنيهم كلهم وقت الـ build، لأن الـ API بيرفض لما يجيله 145 طلب مرة واحدة
+  return []
+}
+
+// generateMetadata: كل منتج ليه عنوان ووصف وصورة لوحده في جوجل وفي الشير
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { productid } = await params
+  const product = await getProduct(productid)
+  // المنتج مش موجود: مفيش داعي جوجل يفهرس الصفحة دي
+  if (!product) return { title: "Product not found", robots: { index: false } }
+
+  // description: وصف الـ API فيه Tab وسطور جديدة، فبنخليهم مسافة واحدة، وجوجل بيعرض حوالي 155 حرف بس
+  const description = product.description.replace(/\s+/g, " ").trim().slice(0, 155)
+  return {
+    title: product.title,
+    description,
+    alternates: { canonical: `/product/${product.id}` },
+    openGraph: { title: product.title, description, images: [product.imageCover] },
+  }
+}
+
+export default async function ProductDetails({ params }: Props) {
 
   const { productid } = await params
-  const response = await fetch('https://ecommerce.routemisr.com/api/v1/products/' + productid)
-  const { data: product }: { data: product } = await response.json()
+  // getProduct: نفس الطلب اللي في generateMetadata، والـ cache بيخليه يتبعت مرة واحدة بس
+  const product = await getProduct(productid)
+  // notFound: لو الـ id غلط، بنعرض صفحة 404 حقيقية بدل صفحة بايظة
+  if (!product) notFound()
+
+  // jsonLd: بيانات منظمة بيقراها جوجل، وبيعرض منها السعر والتقييم والمخزون في نتيجة البحث
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    image: product.images,
+    description: product.description,
+    sku: product._id,
+    brand: { "@type": "Brand", name: product.brand.name },
+    aggregateRating: product.ratingsQuantity
+      ? { "@type": "AggregateRating", ratingValue: product.ratingsAverage, reviewCount: product.ratingsQuantity }
+      : undefined,
+    offers: {
+      "@type": "Offer",
+      price: product.price,
+      priceCurrency: "EGP",
+      availability: product.quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+    },
+  }
+
   return (
 
     <div className="container mx-auto px-4 py-10 pt-16">
+      {/* replace: بنأمّن النص عشان محدش يقدر يحط كود جوه وصف المنتج */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <Link
         href='/product'
         className='inline-flex pt-2 items-center gap-2 text-blue-400 hover:text-blue-300 mb-8 transition group'
       >
-        <ArrowLeft size={20} className='group-hover:-translate-x-1 transition-transform' />
+        <ArrowLeft size={20} aria-hidden="true" className='group-hover:-translate-x-1 transition-transform' />
         Back to Products
       </Link>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -54,7 +107,7 @@ export default async function ProductDetails({ params }: { params: { productid: 
 
           {/* Rating */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1" role="img" aria-label={`Rated ${product.ratingsAverage} out of 5`}>
               {[...Array(5)].map((_, i) => (  // ✅ 5 نجوم
                 <Star
                   key={i}
@@ -83,9 +136,10 @@ export default async function ProductDetails({ params }: { params: { productid: 
           <div className="border-t border-blue-800/50" />
           {/* Description */}
           <div className="space-y-2">
-            <h3 className=" font-semibold text-blue-300 uppercase tracking-wider">
+            {/* h2: بعد عنوان المنتج h1 على طول */}
+            <h2 className=" font-semibold text-blue-300 uppercase tracking-wider">
               Description
-            </h3>
+            </h2>
             <p className="text-gray-300 leading-relaxed ">
               {product.description}
             </p>

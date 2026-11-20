@@ -31,3 +31,9 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next()
 
 }
+
+// matcher: الـ proxy بيشتغل على الصفحات دي بس
+// قبل كده كان بيشتغل مع كل طلب في الموقع، حتى الصور وملفات الـ JS، وده كان بيبطّأ كل حاجة
+export const config = {
+    matcher: ["/profile", "/cart", "/wishlist", "/allorders", "/login", "/forgotpassword", "/signup"],
+}

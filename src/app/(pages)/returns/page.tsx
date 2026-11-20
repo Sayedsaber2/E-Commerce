@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import ReturnsPage from "@/components/Return-Exchange/Return";
+
+export const metadata: Metadata = {
+  title: "Returns and Exchanges",
+  description: "How to return or exchange a product you bought from ShopHub.",
+  alternates: { canonical: "/returns" },
+};
+
 
 export default function Returns() {
   return (

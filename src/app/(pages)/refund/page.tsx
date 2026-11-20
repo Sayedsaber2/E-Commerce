@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Refund Policy",
+  description: "Learn how refunds work at ShopHub and how long they take.",
+  alternates: { canonical: "/refund" },
+};
+
 
 export default function RefundPolicyPage() {
   return (

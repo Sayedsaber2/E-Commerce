@@ -5,20 +5,28 @@ export default function ContactUs() {
   return <div><form className="space-y-5">
               <input
                 type="text"
+                name="name"
+                aria-label="Your name"
+                autoComplete="name"
                 placeholder="Your Name"
-                className="w-full p-3 rounded bg-transparent border border-white/20 focus:outline-none focus:border-blue-400"
+                className="w-full p-3 rounded bg-transparent border border-white/20 focus:outline-none focus:border-blue-400 focus-visible:ring-2 focus-visible:ring-blue-400"
               />
 
               <input
                 type="email"
+                name="email"
+                aria-label="Your email"
+                autoComplete="email"
                 placeholder="Your Email"
-                className="w-full p-3 rounded bg-transparent border border-white/20 focus:outline-none focus:border-blue-400"
+                className="w-full p-3 rounded bg-transparent border border-white/20 focus:outline-none focus:border-blue-400 focus-visible:ring-2 focus-visible:ring-blue-400"
               />
 
               <textarea
                 rows={4}
+                name="message"
+                aria-label="Your message"
                 placeholder="Your Message"
-                className="w-full p-3 rounded bg-transparent border border-white/20 focus:outline-none focus:border-blue-400"
+                className="w-full p-3 rounded bg-transparent border border-white/20 focus:outline-none focus:border-blue-400 focus-visible:ring-2 focus-visible:ring-blue-400"
               />
 
               <button

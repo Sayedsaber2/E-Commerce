@@ -1,24 +1,15 @@
-  "use client"
-  import React from "react";
-  import { Toaster } from "react-hot-toast";
-  import Footer from "@/components/Footer/Footer";
-  import CookieBanner from "@/components/CookieBanner/CookieBanner";
-  import { SessionProvider } from "next-auth/react";
-  export default function MianContext({children}:{children:React.ReactNode}) {
-    return <div>
-      <SessionProvider>
+"use client"
+import React from "react";
+import { Toaster } from "react-hot-toast";
+import { SessionProvider } from "next-auth/react";
 
-            
-            <Toaster
-              position="top-center"
-              reverseOrder={false}
-            />
-            <div className=" ">
-
-              {children}
-            </div>
-            <CookieBanner />
-            <Footer />
-          </SessionProvider>
-    </div>;
-  }
+// MianContext: الحاجات اللي محتاجة المتصفح بس، زي الـ session والتوست
+// الفوتر بقى برّه الملف ده، فبقى بيترسم على السيرفر ومش بيتبعت JavaScript زيادة
+export default function MianContext({ children }: { children: React.ReactNode }) {
+  return (
+    <SessionProvider>
+      <Toaster position="top-center" reverseOrder={false} />
+      {children}
+    </SessionProvider>
+  );
+}

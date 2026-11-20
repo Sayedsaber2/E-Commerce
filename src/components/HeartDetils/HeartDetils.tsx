@@ -34,8 +34,8 @@ export default function HeartDetils({ productId }: { productId: string }) {
     }
 
     return <>
-        <button disabled={Loading} onClick={() => addWishList(productId)} className="p-2.5 rounded-xl cursor-pointer border border-blue-600 hover:bg-pink-500 transition">
-            {Loading ? <Loader2 className=' animate-spin' /> : <Heart className="text-white" size={18} />}
+        <button type="button" aria-label="Add to wishlist" disabled={Loading} onClick={() => addWishList(productId)} className="p-2.5 rounded-xl cursor-pointer border border-blue-600 hover:bg-pink-500 transition">
+            {Loading ? <Loader2 className=' animate-spin' aria-hidden="true" /> : <Heart className="text-white" size={18} aria-hidden="true" />}
         </button>
     </>;
 }

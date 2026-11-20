@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import ContactUs from "@/components/ContactUs/ContactUs";
 import { Mail, Phone, MapPin } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Contact Us",
+  description: "Get in touch with the ShopHub team for help with orders, returns or any question.",
+  alternates: { canonical: "/contact" },
+};
+
 
 export default function ContactPage() {
   return (

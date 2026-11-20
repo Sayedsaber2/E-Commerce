@@ -5,13 +5,16 @@ import { productResponse } from "@/interfaces/interfaceproduct";
 import { BrandResponse } from "@/interfaces/interfacebrand";
 
 export default async function Home() {
+  // next.revalidate: الداتا بتتحفظ ساعة، فالصفحة الرئيسية بتتبني مرة وتتبعت جاهزة لكل الزوار
   const productsRes = await fetch(
-    "https://ecommerce.routemisr.com/api/v1/products"
+    "https://ecommerce.routemisr.com/api/v1/products",
+    { next: { revalidate: 3600 } }
   );
   const productsData: productResponse = await productsRes.json();
   
   const brandsRes = await fetch(
-    "https://ecommerce.routemisr.com/api/v1/brands"
+    "https://ecommerce.routemisr.com/api/v1/brands",
+    { next: { revalidate: 3600 } }
   );
   const brandsData: BrandResponse = await brandsRes.json();
 
@@ -38,7 +41,7 @@ export default async function Home() {
             <div className="flex gap-4 flex-wrap">
               <Link
                 href="/product"
-                className="bg-blue-500 hover:bg-blue-600 px-8 py-4 rounded-lg font-semibold transition shadow-lg hover:shadow-blue-500/30"
+                className="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg font-semibold transition shadow-lg hover:shadow-blue-500/30"
               >
                 Shop Now
               </Link>
@@ -57,7 +60,7 @@ export default async function Home() {
             <Image
             priority
               src={featuredProducts[4]?.imageCover}
-              alt="Hero Product"
+              alt={featuredProducts[4]?.title ?? "Featured product"}
               fill
               className="object-contain drop-shadow-2xl"
               sizes="(max-width: 640px) 100vw, 25vw"
@@ -93,7 +96,6 @@ export default async function Home() {
                   src={product.imageCover}
                   alt={product.title}
                   fill
-                  priority
                   className="object-cover"
                   sizes="(max-width: 640px) 100vw, 25vw"
                 />
@@ -122,7 +124,7 @@ export default async function Home() {
         <div className="flex items-center justify-between mb-10">
           <h2 className="text-3xl font-bold">Trusted Brands</h2>
           <Link
-            href="/brands"
+            href="/brand"
             className="flex items-center gap-2 text-blue-300 hover:text-white transition"
           >
             View All <ArrowRight size={18} />
@@ -133,7 +135,7 @@ export default async function Home() {
           {featuredBrands.map((brand) => (
             <Link
               key={brand._id}
-              href={"/brands/" + brand._id}
+              href={"/brand/" + brand._id}
               className="bg-blue-950 rounded-2xl p-6 flex items-center justify-center hover:scale-105 transition shadow-xl"
             >
               <div className="relative w-full h-20">

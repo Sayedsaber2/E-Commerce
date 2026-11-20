@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 
 import Trackform from "@/components/Trackform/Trackform";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Track Your Order",
+  // index: false = الصفحة دي خاصة بالمستخدم، فمش عايزين جوجل يعرضها في البحث
+  robots: { index: false, follow: false },
+};
+
 
 export default function TrackOrderPage() {
   return (

@@ -1,29 +1,52 @@
 
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import AddToCart from "@/components/Addcart/addcart";
 import FavHeart from "@/components/Heart/heart";
-import { brand } from "@/interfaces/interfacebrand";
-import { productResponse } from "@/interfaces/interfaceproduct";
 import { ArrowLeft, Award, Package, Star } from "lucide-react";
-import { Params } from "next/dist/server/request/params";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { getAllProducts, getBrand } from "@/lib/api";
 
-export default async function BrandDetailsPage({ params }: { params: Params }) {
+type Props = { params: Promise<{ branddetails: string }> }
+
+// generateStaticParams: نفس فكرة صفحة المنتج
+export async function generateStaticParams() {
+  // [] فاضية: كل صفحة بتتبني أول مرة حد يفتحها، وبعدها بتتحفظ جاهزة لكل اللي بعده
+  // مش بنبنيهم كلهم وقت الـ build، لأن الـ API بيرفض لما يجيله 145 طلب مرة واحدة
+  return []
+}
+
+// generateMetadata: كل براند ليه عنوان ووصف لوحده في جوجل
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { branddetails } = await params
-  console.log("🔍 Brand ID:", branddetails)
-  const response = await fetch('https://ecommerce.routemisr.com/api/v1/brands/' + branddetails)
-  const { data: brand }: { data: brand } = await response.json()
+  const brand = await getBrand(branddetails)
+  if (!brand) return { title: "Brand not found", robots: { index: false } }
 
-  const productsResponse = await fetch(`https://ecommerce.routemisr.com/api/v1/products?brand=${brand._id}`)
-  const productsData: productResponse = await productsResponse.json()
+  return {
+    title: `${brand.name} Products`,
+    description: `Shop original ${brand.name} products at the best prices on ShopHub.`,
+    alternates: { canonical: `/brand/${brand._id}` },
+    openGraph: { title: brand.name, images: [brand.image] },
+  }
+}
+
+export default async function BrandDetailsPage({ params }: Props) {
+  const { branddetails } = await params
+  const brand = await getBrand(branddetails)
+  // notFound: الـ id غلط، فبنعرض صفحة 404 حقيقية
+  if (!brand) notFound()
+
+  const products = await getAllProducts(`&brand=${brand._id}`)
+  const productsData = { results: products.length, data: products }
 
   const avgRating = productsData.data.length > 0
     ? (productsData.data.reduce((sum, p) => sum + p.ratingsAverage, 0) / productsData.data.length).toFixed(1)
     : '0.0'
   return <div className='container mx-auto pt-24 px-4'>
-    <Link href='/brands' className='inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 mb-8 transition group'>
-      <ArrowLeft size={20} className='group-hover:-translate-x-1 transition-transform' />
+    <Link href='/brand' className='inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 mb-8 transition group'>
+      <ArrowLeft size={20} aria-hidden="true" className='group-hover:-translate-x-1 transition-transform' />
       <span>Back to All Brands</span>
     </Link>
 
@@ -143,7 +166,8 @@ export default async function BrandDetailsPage({ params }: { params: Params }) {
                     <Star
                       key={i}
                       size={16}
-                      className={`${i < 4 ? "fill-yellow-400 text-yellow-400" : "text-gray-500"
+                      aria-hidden="true"
+                      className={`${i < Math.round(product.ratingsAverage) ? "fill-yellow-400 text-yellow-400" : "text-gray-500"
                         }`}
                     />
                   ))}

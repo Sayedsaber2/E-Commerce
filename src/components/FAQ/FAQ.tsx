@@ -47,11 +47,13 @@ export default function FAQPage() {
           {faqs.map((faq, index) => (
             <div key={index} className="border-b border-white/20 last:border-b-0 py-4">
               <button
+                type="button"
                 onClick={() => toggle(index)}
-                className="w-full text-left flex justify-between items-center text-white font-semibold text-lg focus:outline-none"
+                aria-expanded={openIndex === index}
+                className="w-full text-left flex justify-between items-center text-white font-semibold text-lg rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
               >
                 <span>{faq.question}</span>
-                <span className="text-blue-300">{openIndex === index ? "−" : "+"}</span>
+                <span className="text-blue-300" aria-hidden="true">{openIndex === index ? "−" : "+"}</span>
               </button>
               {openIndex === index && (
                 <p className="mt-2 text-blue-200 text-sm">{faq.answer}</p>
